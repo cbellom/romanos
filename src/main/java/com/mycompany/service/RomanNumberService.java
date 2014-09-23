@@ -14,8 +14,8 @@ public class RomanNumberService {
 
     private static RomanNumberService service = null;
     private RomanNumber romanNumber = new RomanNumber();
-    private String NULL = "Campo vacio";
-    private String INVALID = "Numero invalido";
+    private String null_response = "Campo vacio";
+    private String invalid_response = "Numero invalido";
     
     private RomanNumberService() {
     }
@@ -35,16 +35,16 @@ public class RomanNumberService {
 
     public String parseRoman(String numberInput) {
         int number;
-        if(numberInput==null || numberInput.equals("")){
-            return NULL;
+        if(numberInput==null || "".equals(numberInput)){
+            return null_response;
         }
         try {
             number = Integer.parseInt(numberInput);            
         } catch (NumberFormatException e) {
-            return INVALID;
+            return invalid_response;
         }
         if(number < 1 || number >999){
-            return INVALID;
+            return invalid_response;
         }
         String response;
         int u = number % 10;

@@ -1,5 +1,7 @@
 package com.mycompany.romanos;
 
+import com.mycompany.service.RomanNumberService;
+import static junit.framework.Assert.assertEquals;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -8,25 +10,18 @@ import junit.framework.TestSuite;
  * Unit test for simple App.
  */
 public class AppTest extends TestCase{
-    private String HUNDRED = "C";
-    private String NINETY = "XC";
-    private String FIFTY = "L";
-    private String FORTY = "XL";
-    private String TEN = "X";
-    private String NINE = "IX";
-    private String FIVE = "V";
-    private String FOUR = "IV";
-    private String ONE = "I";
+    private String unit[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+    private String decena[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+    private String centena[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
     private String NULL = "Campo vacio";
     private String INVALID = "Numero invalido";
+    private RomanNumberService service;
     
     public AppTest( String testName ){
         super( testName );
+        service = RomanNumberService.getInstance();
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
     public static Test suite(){
         return new TestSuite( AppTest.class );
     }
@@ -35,86 +30,115 @@ public class AppTest extends TestCase{
      * Rigourous Test :-)
      */
     public void testNotNull(){
-        String response = null;
+        String response;
         String input = null;
-//        response = RomanService.parseRoman(entrada);
+        response = service.parseRoman(input);
         assertEquals(response, NULL);
     }
     
     public void testNumberChar(){
-        String response = null;
+        String response;
         String input = "a";
-//        response = RomanService.parseRoman(entrada);
+        response = service.parseRoman(input);
         assertEquals(response, INVALID);
     }
     
     public void testNumberNegative(){
-        String response = null;
+        String response;
         String input = "-10";
-//        response = RomanService.parseRoman(entrada);
+        response = service.parseRoman(input);
         assertEquals(response, INVALID);
     }
     
-    public void testOne(){
-        String response = null;
-        String input = "1";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, ONE);
+    public void testLowerLimit (){
+        String response;
+        String input = "0";
+        response = service.parseRoman(input);
+        assertEquals(response, INVALID);
     }
     
-    public void testFour(){
-        String response = null;
-        String input = "4";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, FOUR);
+    public void testUpperLimit(){
+        String response;
+        String input = "1000";
+        response = service.parseRoman(input);
+        assertEquals(response, INVALID);
     }
     
-    public void testFive(){
-        String response = null;
-        String input = "5";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, FIVE);
+    public void testUnits(){
+        String response;
+        int i = 1;
+        while (i <= 9) {
+            String input = String.valueOf(i);
+            response = service.parseRoman(input);
+            assertEquals(response, unit[i]);
+            i++;
+        }
     }
     
-    public void testNine(){
+    public void testTens(){
         String response = null;
-        String input = "5";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, NINE);
+        int i = 10;
+        while (i <= 90) {
+            String input = String.valueOf(i);
+            response = service.parseRoman(input);
+            assertEquals(response, decena[i/10]);
+            i=i+10;
+        }
     }
     
-    public void testTen(){
-        String response = null;
-        String input = "10";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, TEN);
+    public void testHundreds(){
+        String response;
+        int i = 100;
+        while (i <= 900) {
+            String input = String.valueOf(i);
+            response = service.parseRoman(input);
+            assertEquals(response, centena[i/100]);
+            i=i+100;
+        }
     }
     
-    public void testForty(){
-        String response = null;
-        String input = "40";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, FORTY);
+    public void testUnitsAndTens(){
+        String response;
+        String input = "11";
+        response = service.parseRoman(input);
+        assertEquals(response, "XI");
+        
+        input = "19";
+        response = service.parseRoman(input);
+        assertEquals(response, "XIX");
     }
     
-    public void testFifty(){
-        String response = null;
-        String input = "50";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, FIFTY);
+    public void testTensAndHundreds(){
+        String response;
+        int i = 100;
+        String input = "110";
+        response = service.parseRoman(input);
+        assertEquals(response, "CX");
+        
+        input = "190";
+        response = service.parseRoman(input);
+        assertEquals(response, "CXC");
     }
     
-    public void testNinety(){
-        String response = null;
-        String input = "90";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, NINETY);
+    public void testUnitsAndHundreds(){
+        String response;
+        String input = "101";
+        response = service.parseRoman(input);
+        assertEquals(response, "CI");
+        
+        input = "109";
+        response = service.parseRoman(input);
+        assertEquals(response, "CIX");
     }
     
-    public void testHundres(){
-        String response = null;
-        String input = "100";
-//        response = RomanService.parseRoman(entrada);
-        assertEquals(response, HUNDRED);
+    public void testUnitsTensHundreds(){
+        String response;
+        String input = "111";
+        response = service.parseRoman(input);
+        assertEquals(response, "CXI");
+        
+        input = "199";
+        response = service.parseRoman(input);
+        assertEquals(response, "CXCIX");
     }
 }
